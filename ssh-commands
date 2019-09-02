@@ -1,0 +1,17 @@
+# 在拷贝的时候，不想弹出yes/no 选项，用-o StrictHostKeyChecking=no 
+# scp -o StrictHostKeyChecking=no  your-file root@your-server-ip:/your-directory 
+
+# 登录时
+ssh -o StrictHostKeyChecking=no  -i your-pem.pem root@your-server-ip
+
+#解释
+man ssh_config 中的描述：
+     StrictHostKeyChecking
+             If this flag is set to yes, ssh(1) will never automatically add host keys to the ~/.ssh/known_hosts file, and
+             refuses to connect to hosts whose host key has changed.  This provides maximum protection against trojan horse
+             attacks, though it can be annoying when the /etc/ssh/ssh_known_hosts file is poorly maintained or when connec-
+             tions to new hosts are frequently made.  This option forces the user to manually add all new hosts.  If this
+             flag is set to no, ssh will automatically add new host keys to the user known hosts files.  If this flag is set
+             to ask (the default), new host keys will be added to the user known host files only after the user has con-
+             firmed that is what they really want to do, and ssh will refuse to connect to hosts whose host key has changed.
+             The host keys of known hosts will be verified automatically in all cases.
