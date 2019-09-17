@@ -1,0 +1,38 @@
+[root@master001 ~]# cat pv.yaml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-local
+spec:
+  capacity:
+    storage: 100Gi
+  # volumeMode field requires BlockVolume Alpha feature gate to be enabled.
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    path: /mnt/perseus-inference
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - worker001
+[root@master001 ~]# cat pvc.yaml 
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-local
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: local-storage
+  
+  # arena serve custom --name=perseus-serving                    --gpus=1                    --replicas=1                    --port=8001                    --restful-port=8000                    --image=registry.cn-shanghai.aliyuncs.com/ai_beijing/perseus_inference:v24                    --data=pvc-local:/mnt                    "/opt/perseus/bin/perseus_model_server --model-store=/opt/perseus/model"
